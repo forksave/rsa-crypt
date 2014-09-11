@@ -24,6 +24,13 @@ ApplicationWindow {
             width: parent.width
             text: qsTr("Исходный текст")
         }
+        Button{
+            id:proceedBtn
+            anchors.top:sourceText.bottom
+            anchors.bottomMargin: margins
+            text: qsTr("Обработать")
+            onClicked: proceedBtnClicked()
+        }
         TextArea{
             id:sourceText
             anchors.top: sourceTextLabel.bottom
@@ -32,6 +39,7 @@ ApplicationWindow {
             height: parent.height-sourceTextLabel.height
 
         }
+
 
     }
     Rectangle {
@@ -88,10 +96,21 @@ ApplicationWindow {
         id:additionalInfo
         anchors.horizontalCenter: sourceTextRec.horizontalCenter
         anchors.top:sourceTextRec.bottom
-        anchors.topMargin: margins
+        anchors.topMargin: 4*margins
         width: sourceTextRec.width
         height: sourceTextRec.height
+
     }
 
+    function proceedBtnClicked(){
+        cryptManager.setSourceText(sourceText.text)
+        cryptManager.encryptText()
+        cryptManager.decryptText()
+        encodedText.text=cryptManager.getEncryptedText();
+        decodedText.text=cryptManager.getDecryptedText();
+
+        //encodedText.update()
+
+    }
 
 }
