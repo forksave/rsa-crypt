@@ -28,14 +28,14 @@ void CryptMananger::encryptText(){
     }
 
     int encryptTextSize=encryptedText.length();
-    std::string tempEncryptText=encryptedText.toStdString();
+    QString tempEncryptText=encryptedText;
     int tempEncryptInt[encryptTextSize];
 
     encryptedText.clear();
     for(int i=0;i<encryptTextSize;i++){
-        tempEncryptInt[i]=modExp(tempEncryptText[i],e,n);
+        tempEncryptInt[i]=modExp(tempEncryptText[i].unicode(),e,n);
         encryptedText.append(QString::number(tempEncryptInt[i])+" ");
-        qDebug()<<"Enc"<<(int)tempEncryptText[i];
+        qDebug()<<"Enc"<<tempEncryptText[i];
     }
 
 }
@@ -56,7 +56,7 @@ void CryptMananger::decryptText(){
     for(int i=0;i<decryptTextSize;i++){
         tempDecryptInt[i]=tempDecryptText[i].toInt();
         tempDecryptInt[i]=modExp(tempDecryptInt[i],d,n);
-        decryptedText.append((char)tempDecryptInt[i]);
+        decryptedText.append(QChar(tempDecryptInt[i]));
         qDebug()<<"Dec"<<tempDecryptInt[i];
     }
 
