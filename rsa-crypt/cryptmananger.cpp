@@ -7,11 +7,6 @@ CryptMananger::CryptMananger(QObject *parent) :
     generatePrimes(150);
     //init randomizer
     initRand();
-    //create keys
-    createKeys();
-
-  //  qDebug()<<"FASAS"<<modExp(221,1134,33);
-
 }
 
 void CryptMananger::setSourceText(QString text)
@@ -20,6 +15,9 @@ void CryptMananger::setSourceText(QString text)
 }
 
 void CryptMananger::encryptText(){
+    encryptLog.clear();
+    encryptLog.append(generateLog()+"\n");
+    encryptLog.append("Кодировка\n");
     if(!sourceText.isEmpty())
         encryptedText=sourceText;
     else{
@@ -35,12 +33,17 @@ void CryptMananger::encryptText(){
     for(int i=0;i<encryptTextSize;i++){
         tempEncryptInt[i]=modExp(tempEncryptText[i].unicode(),e,n);
         encryptedText.append(QString::number(tempEncryptInt[i])+" ");
-        qDebug()<<"Enc"<<tempEncryptText[i];
+        encryptLog.append("{ "+tempEncryptText[i]+"="+QString::number(tempEncryptText[i].unicode())+";  "+
+                          QString::number(tempEncryptText[i].unicode())+" ^ "+QString::number(e)+
+                          " mod "+QString::number(n)+"="+encryptedText[i]+" }\t");
     }
 
 }
 
 void CryptMananger::decryptText(){
+    decryptLog.clear();
+    decryptLog.append(generateLog()+"\n");
+    decryptLog.append("Раскодировка\n");
     if(!encryptedText.isEmpty())
         decryptedText=encryptedText;
     else{
@@ -51,13 +54,14 @@ void CryptMananger::decryptText(){
     QStringList tempDecryptText=decryptedText.split(" ");
     int decryptTextSize=tempDecryptText.size()-1;
     int tempDecryptInt[decryptTextSize];
-
+    qDebug()<<decryptedText;
     decryptedText.clear();
     for(int i=0;i<decryptTextSize;i++){
         tempDecryptInt[i]=tempDecryptText[i].toInt();
         tempDecryptInt[i]=modExp(tempDecryptInt[i],d,n);
         decryptedText.append(QChar(tempDecryptInt[i]));
-        qDebug()<<"Dec"<<tempDecryptInt[i];
+        decryptLog.append("{ "+tempDecryptText[i]+" ^ "+QString::number(d)+
+                          " mod "+QString::number(n)+"="+decryptedText[i]+" }\t");
     }
 
 }
@@ -68,6 +72,17 @@ QString CryptMananger::getEncryptedText(){
 
 QString CryptMananger::getDecryptedText(){
     return decryptedText;
+}
+
+QString CryptMananger::generateLog()
+{
+    QString log;
+    log+="Сгенерированы переменные P="+QString::number(p)+" Q="+QString::number(q)+"\n";
+    log+="Произведение P и Q ="+QString::number(n)+"\n";
+    log+="Функция Эйлера "+QString::number(f)+"\n";
+    log+="Публичный ключ для кодировки "+QString::number(e)+" - "+QString::number(n)+"\n";
+    log+="Секретный ключ для декодировки "+QString::number(d)+" - "+QString::number(n)+"\n";
+    return log;
 }
 
 void CryptMananger::generatePrimes(int count){
@@ -113,6 +128,7 @@ void CryptMananger::createKeys(){
     }
 
     int i=0;
+    d=0;
     bool d_found=false;
     while(!d_found)
     {
@@ -130,6 +146,16 @@ void CryptMananger::createKeys(){
     }
 
     qDebug()<<"P"<<p<<"Q"<<q<<"N"<<n<<"F"<<f<<"E"<<e<<"D"<<d;
+}
+
+QString CryptMananger::getEncryptLog()
+{
+    return encryptLog;
+}
+
+QString CryptMananger::getDecryptLog()
+{
+    return decryptLog;
 }
 
 int CryptMananger::calcGSD(int x,int y){

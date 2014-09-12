@@ -17,6 +17,10 @@ public:
     Q_INVOKABLE QString getDecryptedText();
     Q_INVOKABLE void encryptText();
     Q_INVOKABLE void decryptText();
+    Q_INVOKABLE QString generateLog();
+    Q_INVOKABLE void createKeys();
+    Q_INVOKABLE QString getEncryptLog();
+    Q_INVOKABLE QString getDecryptLog();
 private:
     QString sourceText;
     QString encryptedText;
@@ -28,12 +32,12 @@ private:
     void initRand();
     int getRand(int high, int low);
     //create keys
-    void createKeys();
     int p,q,n,f,e,d;
     int calcGSD(int x,int y);
     int modExp(long long base, long long exp, long long mod);
-public slots:
-
+    //log
+    QString encryptLog;
+    QString decryptLog;
 };
 
 #endif // CRYPTMANANGER_H

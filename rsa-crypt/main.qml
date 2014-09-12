@@ -1,5 +1,6 @@
 import QtQuick 2.2
 import QtQuick.Controls 1.1
+import QtQuick.Controls.Styles 1.2
 
 ApplicationWindow {
     id: applicationWindow1
@@ -25,11 +26,21 @@ ApplicationWindow {
             text: qsTr("Исходный текст")
         }
         Button{
-            id:proceedBtn
+            id:encodeBtn
             anchors.top:sourceText.bottom
             anchors.bottomMargin: margins
-            text: qsTr("Обработать")
-            onClicked: proceedBtnClicked()
+            text: qsTr("Закодировать")
+            onClicked: encodeBtnClicked()
+        }
+        Button{
+            id:decodeBtn
+            anchors.top:sourceText.bottom
+            anchors.bottomMargin: margins
+            anchors.left: encodeBtn.right
+            anchors.leftMargin: margins
+            enabled: false;
+            text: qsTr("Раскодировать")
+            onClicked: decodeBtnClicked()
         }
         TextArea{
             id:sourceText
@@ -90,25 +101,42 @@ ApplicationWindow {
         }
     }
 
-    Label {
-        id:additionalInfo
+//    TextArea {
+//        id:additionalInfo
+//        anchors.bottom: parent.bottom
+//        anchors.bottomMargin: margins
+//        anchors.horizontalCenter: parent.horizontalCenter
+//        width: parent.width-2*margins
+//        height: .1*parent.height
+//    }
+
+    TextArea {
+        id: consoleLog
         anchors.horizontalCenter: sourceTextRec.horizontalCenter
         anchors.top:sourceTextRec.bottom
         anchors.topMargin: 4*margins
         width: sourceTextRec.width
         height: sourceTextRec.height
 
+        font.pixelSize: 12
+        visible: text===""?false:true
+
     }
 
-    function proceedBtnClicked(){
+    function encodeBtnClicked(){
+        cryptManager.createKeys();
         cryptManager.setSourceText(sourceText.text)
-        cryptManager.encryptText()
-        cryptManager.decryptText()
+        cryptManager.encryptText() 
         encodedText.text=cryptManager.getEncryptedText();
+        //additionalInfo.text=cryptManager.generateLog();
+        decodeBtn.enabled=true
+        consoleLog.text=cryptManager.getEncryptLog();
+    }
+
+    function decodeBtnClicked(){
+        cryptManager.decryptText()
         decodedText.text=cryptManager.getDecryptedText();
-
-        //encodedText.update()
-
+        consoleLog.text=cryptManager.getDecryptLog();
     }
 
 }
