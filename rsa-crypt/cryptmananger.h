@@ -5,6 +5,7 @@
 #include <QDebug>
 
 #include <QTime>
+#include <cmath>
 
 class CryptMananger : public QObject
 {
@@ -26,6 +27,11 @@ private:
     //init randomizer
     void initRand();
     int getRand(int high, int low);
+    //create keys
+    void createKeys();
+    int p,q,n,f,e,d;
+    int calcGSD(int x,int y);
+    int modExp(long long base, long long exp, long long mod);
 public slots:
 
 };

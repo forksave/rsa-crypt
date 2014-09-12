@@ -39,8 +39,6 @@ ApplicationWindow {
             height: parent.height-sourceTextLabel.height
 
         }
-
-
     }
     Rectangle {
         id: encodedTextRec
